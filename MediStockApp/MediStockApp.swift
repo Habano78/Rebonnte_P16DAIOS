@@ -6,16 +6,29 @@
 //
 
 import SwiftUI
+import FirebaseCore
 
 @main
 struct MediStockApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    var sessionStore = SessionStore()
-    
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-                .environmentObject(sessionStore)
+        
+        
+        @State private var container: DIContainer
+        
+        init() {
+                
+                if FirebaseApp.app() == nil {
+                        FirebaseApp.configure()
+                }
+                
+                self.container = DIContainer()
         }
-    }
+        
+        var body: some Scene {
+                WindowGroup {
+                        RootView()
+                                .environment(container.authViewModel)
+                                .environment(container.medicineViewModel)
+                                .environment(container.sessionStore)
+                }
+        }
 }

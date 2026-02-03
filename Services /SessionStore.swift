@@ -1,57 +1,45 @@
 import Foundation
-import Firebase
+import Observation
+import FirebaseAuth
 
-class SessionStore: ObservableObject {
-    @Published var session: User?
-    var handle: AuthStateDidChangeListenerHandle?
+@MainActor
+@Observable
 
-    func listen() {
-        handle = Auth.auth().addStateDidChangeListener { (auth, user) in
-            if let user = user {
-                self.session = User(uid: user.uid, email: user.email)
-            } else {
-                self.session = nil
-            }
+final class SessionStore {
+        
+        //MARK: Properties
+        var session: User?
+        var errorMessage: String?
+        private let authService: any AuthServiceProtocol
+        private nonisolated var handle: AuthStateDidChangeListenerHandle?
+        
+        init(authService: any AuthServiceProtocol) {
+                self.authService = authService
+                self.listen()
         }
-    }
-
-    func signUp(email: String, password: String) {
-        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
-            if let error = error {
-                print("Error creating user: \(error.localizedDescription) \(error)")
-            } else {
-                self.session = User(uid: result?.user.uid ?? "", email: result?.user.email ?? "")
-            }
+        
+        func listen() {
+                handle = authService.observeAuthState { [weak self] user in
+                        Task { @MainActor in
+                                self?.session = user
+                        }
+                }
         }
-    }
-
-    func signIn(email: String, password: String) {
-        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
-            if let error = error {
-                print("Error signing in: \(error.localizedDescription)")
-            } else {
-                self.session = User(uid: result?.user.uid ?? "", email: result?.user.email ?? "")
-            }
+        
+        func signOut() {
+                do {
+                        try authService.signOut()
+                        self.errorMessage = nil
+                } catch {
+                        self.errorMessage = error.localizedDescription
+                }
         }
-    }
-
-    func signOut() {
-        do {
-            try Auth.auth().signOut()
-            self.session = nil
-        } catch let error {
-            print("Error signing out: \(error.localizedDescription)")
+        
+        deinit {
+                if let handle = handle {
+                        authService.removeAuthStateListener(handle)
+                }
         }
-    }
-
-    func unbind() {
-        if let handle = handle {
-            Auth.auth().removeStateDidChangeListener(handle)
-        }
-    }
 }
 
-struct User {
-    var uid: String
-    var email: String?
-}
+///Le SessionStore est le gestionnaire de l'état global de l'utilisateur. Son rôle est de maintenir en permanence la "Source de Vérité" sur l'identité de la personne qui utilise l'application.

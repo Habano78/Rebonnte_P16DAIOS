@@ -1,31 +1,40 @@
+//
+//  MedicineListView.swift
+//  MediStock
+//
+//  Created by Perez William on 03/02/2026.
+//
+
 import SwiftUI
 
 struct MedicineListView: View {
-    @ObservedObject var viewModel = MedicineStockViewModel()
-    var aisle: String
-
-    var body: some View {
-        List {
-            ForEach(viewModel.medicines.filter { $0.aisle == aisle }, id: \.id) { medicine in
-                NavigationLink(destination: MedicineDetailView(medicine: medicine)) {
-                    VStack(alignment: .leading) {
-                        Text(medicine.name)
-                            .font(.headline)
-                        Text("Stock: \(medicine.stock)")
-                            .font(.subheadline)
-                    }
+        
+        //MARK: Dependence
+        @Environment(MedicineStockViewModel.self) private var viewModel
+        
+        //MARK: Propertie
+        let aisle: String
+        
+        //MARK: Body
+        var body: some View {
+                List {
+                        
+                        ForEach(viewModel.medicines.filter { $0.aisle == aisle }) { medicine in
+                                NavigationLink(destination: MedicineDetailView(medicine: medicine)) {
+                                        VStack(alignment: .leading) {
+                                                Text(medicine.name)
+                                                        .font(.headline)
+                                                Text("Stock : \(medicine.stock)")
+                                                        .font(.subheadline)
+                                                        .foregroundColor(medicine.stock < 5 ? .red : .secondary)
+                                        }
+                                }
+                        }
                 }
-            }
+                .navigationTitle(aisle)
         }
-        .navigationBarTitle(aisle)
-        .onAppear {
-            viewModel.fetchMedicines()
-        }
-    }
 }
 
-struct MedicineListView_Previews: PreviewProvider {
-    static var previews: some View {
-        MedicineListView(aisle: "Aisle 1").environmentObject(SessionStore())
-    }
+#Preview {
+        MedicineListView(aisle: "Aisle 1")
 }

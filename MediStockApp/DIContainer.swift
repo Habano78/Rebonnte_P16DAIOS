@@ -5,28 +5,42 @@
 //  Created by Perez William on 30/01/2026.
 //
 
-import Foundation
+import SwiftUI
+import Observation
 
-final class DIContainer: ObservableObject {
-    // Abstractions (Protocoles)
-    let authService: AuthServiceProtocol
-    let medicineService: MedicineServiceProtocol
-    let historyService: HistoryServiceProtocol
-    let userService: UserServiceProtocol
-    
-    // État partagé
-    let appSession: SessionStore
+@MainActor
+@Observable
+final class DIContainer {
+        /// Services
+        let authService: any AuthServiceProtocol
+        let medicineService: any MedicineServiceProtocol
+        let historyService: any HistoryServiceProtocol
+        let userService: any UserServiceProtocol
+        
+        let sessionStore:  SessionStore
+        
+        /// ViewModels
+        let authViewModel: AuthViewModel
+        let medicineViewModel: MedicineStockViewModel
+        
+        //MARK: Init
+        init() {
+                let auth = FirebaseAuthService()
+                let medicine = FirebaseMedicineService()
+                let history = FirebaseHistoryService()
+                let user = FirebaseUserService()
+                
+                self.authService = auth
+                self.medicineService = medicine
+                self.historyService = history
+                self.userService = user
 
-    init(
-        authService: AuthServiceProtocol,
-        medicineService: MedicineServiceProtocol,
-        historyService: HistoryServiceProtocol,
-        userService: UserServiceProtocol
-    ) {
-        self.authService = authService
-        self.medicineService = medicineService
-        self.historyService = historyService
-        self.userService = userService
-        self.appSession = SessionStore(authService: authService)
-    }
+                self.sessionStore = SessionStore(authService: auth)
+                
+                self.authViewModel = AuthViewModel(authService: auth, userService: user)
+                self.medicineViewModel = MedicineStockViewModel(
+                        medicineService: medicine,
+                        historyService: history,
+                        authService: auth)
+        }
 }
