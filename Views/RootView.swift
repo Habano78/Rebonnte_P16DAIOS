@@ -11,7 +11,7 @@ struct RootView: View {
         
         //MARK: Dependence
         @Environment(SessionStore.self) private var sessionStore
-        @Environment(AuthViewModel.self) private var authViewModel
+        //@Environment(AuthViewModel.self) private var authViewModel
         
         //MARK: Body
         var body: some View {
@@ -19,7 +19,7 @@ struct RootView: View {
                         if sessionStore.session != nil {
                                 MainTabView()
                         } else {
-                                LoginView(viewModel: authViewModel)
+                                LoginView()
                         }
                 }
         }

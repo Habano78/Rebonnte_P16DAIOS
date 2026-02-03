@@ -8,6 +8,7 @@
 import Foundation
 @preconcurrency import FirebaseAuth
 
+// MARK: - Erreurs d'Authentification
 enum AuthError: Error, LocalizedError {
         case invalidEmail
         case weakPassword
@@ -26,51 +27,48 @@ enum AuthError: Error, LocalizedError {
         }
 }
 
-//MARK
-/// Contrat pour la gestion de l'identité utilisateur
+// MARK: - Protocol
 protocol AuthServiceProtocol: Sendable {
-        func observeAuthState(completion: @escaping @Sendable (User?) -> Void) -> AuthStateDidChangeListenerHandle
-        func removeAuthStateListener(_ handle: AuthStateDidChangeListenerHandle)
-        
-        @MainActor func signIn(email: String, password: String) async throws -> User
-        @MainActor func signUp(email: String, password: String) async throws -> User
+        func userStream() -> AsyncStream<User?>
+        func signIn(email: String, password: String) async throws -> User
+        func signUp(email: String, password: String) async throws -> User
         func signOut() throws
+        func observeAuthState(completion: @escaping (User?) -> Void) -> AuthStateDidChangeListenerHandle?
+        func removeAuthStateListener(_ handle: AuthStateDidChangeListenerHandle)
 }
 
+// MARK: - Implementation
 final class FirebaseAuthService: AuthServiceProtocol {
         private let auth = Auth.auth()
         
-        func observeAuthState(completion: @escaping @Sendable (User?) -> Void) -> AuthStateDidChangeListenerHandle {
-                return auth.addStateDidChangeListener { _, firebaseUser in
-                        if let user = firebaseUser {
-                                completion(User(id: user.uid, email: user.email ?? ""))
-                        } else {
-                                completion(nil)
+        func userStream() -> AsyncStream<User?> {
+                AsyncStream { continuation in
+                        let handle = auth.addStateDidChangeListener { _, firebaseUser in
+                                let user = firebaseUser.map { User(id: $0.uid, email: $0.email ?? "") }
+                                continuation.yield(user)
+                        }
+                        continuation.onTermination = { @Sendable _ in
+                                Auth.auth().removeStateDidChangeListener(handle)
                         }
                 }
         }
         
-        func removeAuthStateListener(_ handle: AuthStateDidChangeListenerHandle) {
-                auth.removeStateDidChangeListener(handle)
-        }
-        
-        /// Connecte un utilisateur et traduit les erreurs Firebase en erreurs métier
-        @MainActor
         func signIn(email: String, password: String) async throws -> User {
                 do {
                         let result = try await auth.signIn(withEmail: email, password: password)
                         return User(id: result.user.uid, email: result.user.email ?? "")
                 } catch {
+                        
                         throw mapError(error)
                 }
         }
         
-        @MainActor
         func signUp(email: String, password: String) async throws -> User {
                 do {
                         let result = try await auth.createUser(withEmail: email, password: password)
                         return User(id: result.user.uid, email: result.user.email ?? "")
                 } catch {
+                        
                         throw mapError(error)
                 }
         }
@@ -79,7 +77,19 @@ final class FirebaseAuthService: AuthServiceProtocol {
                 try auth.signOut()
         }
         
-        // MARK: - Private Helpers
+        func observeAuthState(completion: @escaping (User?) -> Void) -> AuthStateDidChangeListenerHandle? {
+                return auth.addStateDidChangeListener { _, firebaseUser in
+                        let user = firebaseUser.map { User(id: $0.uid, email: $0.email ?? "") }
+                        completion(user)
+                }
+        }
+        
+        func removeAuthStateListener(_ handle: AuthStateDidChangeListenerHandle) {
+                auth.removeStateDidChangeListener(handle)
+        }
+        
+        // MARK: - Private Helper
+        
         private func mapError(_ error: Error) -> AuthError {
                 let code = (error as NSError).code
                 switch AuthErrorCode.Code(rawValue: code) {

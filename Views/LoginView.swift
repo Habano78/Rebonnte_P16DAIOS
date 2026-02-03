@@ -8,29 +8,23 @@
 import SwiftUI
 
 struct LoginView: View {
-        
-        //MARK: Deopendences
+        // On utilise uniquement l'Environment
         @Environment(AuthViewModel.self) private var viewModel
         
-        //MARK: Properties$
-        @Bindable var viewModelBindable: AuthViewModel
-        
-        init(viewModel: AuthViewModel) {
-                self.viewModelBindable = viewModel
-        }
-        
-        //MARK: Body
         var body: some View {
+                // On crée le binding localement ICI
+                @Bindable var vm = viewModel
+                
                 VStack(spacing: 20) {
                         Text("Connexion MediStock")
                                 .font(.largeTitle).bold()
                         
                         VStack(alignment: .leading) {
-                                TextField("Email", text: $viewModelBindable.email)
+                                TextField("Email", text: $vm.email)
                                         .textFieldStyle(.roundedBorder)
                                         .autocapitalization(.none)
                                 
-                                SecureField("Mot de passe", text: $viewModelBindable.password)
+                                SecureField("Mot de passe", text: $vm.password)
                                         .textFieldStyle(.roundedBorder)
                         }
                         .padding()
@@ -48,7 +42,10 @@ struct LoginView: View {
                                 .buttonStyle(.borderedProminent)
                                 
                                 Button("Créer un compte") {
-                                        Task { await viewModel.signUp() }
+                                        Task {
+                                                print("Clic détecté : Lancement de signUp")
+                                                await viewModel.signUp()
+                                        }
                                 }
                         }
                 }
