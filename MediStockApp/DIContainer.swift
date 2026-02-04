@@ -8,8 +8,8 @@
 import SwiftUI
 import Observation
 
-@MainActor
 @Observable
+@MainActor
 final class DIContainer {
         /// Services
         let authService: any AuthServiceProtocol
@@ -37,7 +37,9 @@ final class DIContainer {
 
                 self.sessionStore = SessionStore(authService: auth)
                 
-                self.authViewModel = AuthViewModel(authService: auth, userService: user)
+                self.authViewModel = AuthViewModel(
+                        authService: auth,
+                        userService: user)
                 self.medicineViewModel = MedicineStockViewModel(
                         medicineService: medicine,
                         historyService: history,

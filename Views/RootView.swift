@@ -10,13 +10,13 @@ import SwiftUI
 struct RootView: View {
         
         //MARK: Dependence
-        @Environment(SessionStore.self) private var sessionStore
-        //@Environment(AuthViewModel.self) private var authViewModel
+        @Environment(DIContainer.self) private var di
+        
         
         //MARK: Body
         var body: some View {
                 Group {
-                        if sessionStore.session != nil {
+                        if di.sessionStore.session != nil {
                                 MainTabView()
                         } else {
                                 LoginView()

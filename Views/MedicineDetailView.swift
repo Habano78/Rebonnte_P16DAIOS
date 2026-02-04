@@ -9,8 +9,7 @@ import SwiftUI
 struct MedicineDetailView: View {
         
         //MARK: Dependences
-        @Environment(MedicineStockViewModel.self) private var viewModel
-        @Environment(SessionStore.self) private var sessionStore
+        @Environment(DIContainer.self) private var di
         
         //MARK: Properties
         @State var medicine: Medicine
@@ -28,11 +27,11 @@ struct MedicineDetailView: View {
                                 Button("Enregistrer les modifications") {
                                         saveChanges()
                                 }
-                                .disabled(sessionStore.session == nil)
+                                .disabled(di.sessionStore.session == nil)
                         }
                         
                         Section("Historique des mouvements") {
-                                ForEach(viewModel.history) { entry in
+                                ForEach(di.medicineViewModel.history) { entry in
                                         VStack(alignment: .leading) {
                                                 Text(entry.action).font(.subheadline).bold()
                                                 Text("Par : \(entry.userEmail)").font(.caption)
@@ -44,16 +43,16 @@ struct MedicineDetailView: View {
                 .navigationTitle(medicine.name)
                 .task {
                         // Chargement de l'historique spécifique au médicament
-                        await viewModel.fetchHistory(for: medicine.id)
+                        await di.medicineViewModel.fetchHistory(for: medicine.id)
                 }
         }
         
         //MARK: private
         private func saveChanges() {
-                guard let userEmail = sessionStore.session?.email else { return }
+                guard let userEmail = di.sessionStore.session?.email else { return }
                 Task {
                         // Le ViewModel s'occupe de mettre à jour Firestore et l'historique
-                        await viewModel.updateMedicine(medicine, userEmail: userEmail)
+                        await di.medicineViewModel.updateMedicine(medicine, userEmail: userEmail)
                 }
         }
 }

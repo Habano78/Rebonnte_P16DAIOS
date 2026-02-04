@@ -11,16 +11,14 @@ import SwiftUI
 
 struct AisleListView: View {
         
-        //MARK: Dépendances
-        @Environment(MedicineStockViewModel.self) private var viewModel
-        @Environment(SessionStore.self) private var sessionStore
+        //MARK: Dépendance
+        @Environment(DIContainer.self) private var di
         
         //MARK: Body
         var body: some View {
-                NavigationStack { // Modernisation : NavigationStack au lieu de NavigationView
+                NavigationStack {
                         List {
-                                // Utilisation de la propriété calculée du ViewModel
-                                ForEach(viewModel.aisles, id: \.self) { aisle in
+                                ForEach(di.medicineViewModel.aisles, id: \.self) { aisle in
                                         NavigationLink(destination: MedicineListView(aisle: aisle)) {
                                                 Text(aisle)
                                                         .font(.body)
@@ -31,9 +29,8 @@ struct AisleListView: View {
                         .toolbar {
                                 ToolbarItem(placement: .navigationBarTrailing) {
                                         Button(action: {
-                                                // Utilise l'ID de l'utilisateur connecté pour l'historique
-                                                if let userId = sessionStore.session?.id {
-                                                        Task { await viewModel.addRandomMedicine(userId: userId) }
+                                                if let userId = di.sessionStore.session?.id {
+                                                        Task { await di.medicineViewModel.addRandomMedicine(userId: userId) }
                                                 }
                                         }) {
                                                 Image(systemName: "plus")
@@ -41,8 +38,7 @@ struct AisleListView: View {
                                 }
                         }
                         .task {
-                                // Chargement asynchrone conforme au Green Code
-                                await viewModel.fetchMedicines()
+                                await di.medicineViewModel.fetchMedicines()
                         }
                 }
         }

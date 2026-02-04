@@ -9,7 +9,7 @@ import Foundation
 @preconcurrency import FirebaseAuth
 
 // MARK: - Erreurs d'Authentification
-enum AuthError: Error, LocalizedError {
+enum AuthServiceError: Error, LocalizedError {
         case invalidEmail
         case weakPassword
         case userNotFound
@@ -90,7 +90,7 @@ final class FirebaseAuthService: AuthServiceProtocol {
         
         // MARK: - Private Helper
         
-        private func mapError(_ error: Error) -> AuthError {
+        private func mapError(_ error: Error) -> AuthServiceError {
                 let code = (error as NSError).code
                 switch AuthErrorCode.Code(rawValue: code) {
                 case .invalidEmail: return .invalidEmail

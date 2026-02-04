@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct LoginView: View {
-        // On utilise uniquement l'Environment
-        @Environment(AuthViewModel.self) private var viewModel
         
+        //MARK: depandence
+        @Environment(DIContainer.self) private var di
+
+
         var body: some View {
-                // On crée le binding localement ICI
-                @Bindable var vm = viewModel
+
+                @Bindable var vm = di.authViewModel
                 
                 VStack(spacing: 20) {
                         Text("Connexion MediStock")
@@ -29,22 +31,22 @@ struct LoginView: View {
                         }
                         .padding()
                         
-                        if let error = viewModel.errorMessage {
+                        if let error = di.authViewModel.errorMessage {
                                 Text(error).foregroundColor(.red).font(.caption)
                         }
                         
-                        if viewModel.isLoading {
+                        if di.authViewModel.isLoading {
                                 ProgressView()
                         } else {
                                 Button("Se connecter") {
-                                        Task { await viewModel.signIn() }
+                                        Task { await di.authViewModel.signIn() }
                                 }
                                 .buttonStyle(.borderedProminent)
                                 
                                 Button("Créer un compte") {
                                         Task {
                                                 print("Clic détecté : Lancement de signUp")
-                                                await viewModel.signUp()
+                                                await di.authViewModel.signUp()
                                         }
                                 }
                         }

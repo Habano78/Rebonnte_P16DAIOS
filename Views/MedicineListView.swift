@@ -10,7 +10,7 @@ import SwiftUI
 struct MedicineListView: View {
         
         //MARK: Dependence
-        @Environment(MedicineStockViewModel.self) private var viewModel
+        @Environment(DIContainer.self) private var di
         
         //MARK: Propertie
         let aisle: String
@@ -19,7 +19,7 @@ struct MedicineListView: View {
         var body: some View {
                 List {
                         
-                        ForEach(viewModel.medicines.filter { $0.aisle == aisle }) { medicine in
+                        ForEach(di.medicineViewModel.medicines.filter { $0.aisle == aisle }) { medicine in
                                 NavigationLink(destination: MedicineDetailView(medicine: medicine)) {
                                         VStack(alignment: .leading) {
                                                 Text(medicine.name)

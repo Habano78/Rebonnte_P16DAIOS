@@ -180,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				229893902F326932007CC660 /* GoogleService-Info.plist */,
+				53E0D89A2C06084900DE1134 /* Assets.xcassets */,
 				53E0D8952C06084700DE1134 /* MediStockApp */,
 				229893482F2CEBE3007CC660 /* Models */,
 				229893492F2CEBEB007CC660 /* Services  */,
@@ -207,7 +208,6 @@
 			children = (
 				53E0D8962C06084700DE1134 /* MediStockApp.swift */,
 				2298934C2F2CEE39007CC660 /* DIContainer.swift */,
-				53E0D89A2C06084900DE1134 /* Assets.xcassets */,
 			);
 			path = MediStockApp;
 			sourceTree = "<group>";

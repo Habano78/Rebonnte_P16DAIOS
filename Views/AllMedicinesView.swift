@@ -10,8 +10,7 @@ import SwiftUI
 struct AllMedicinesView: View {
         
         //MARK: Dependences
-        @Environment(MedicineStockViewModel.self) private var viewModel
-        @Environment(SessionStore.self) private var sessionStore
+        @Environment(DIContainer.self) private var di
         
         //MARK: Properties
         @State private var filterText: String = ""
@@ -36,8 +35,8 @@ struct AllMedicinesView: View {
                         .navigationTitle("Inventaire complet")
                         .toolbar {
                                 Button(action: {
-                                        if let email = sessionStore.session?.email {
-                                                Task { await viewModel.addRandomMedicine(userId: email) }
+                                        if let email = di.sessionStore.session?.email {
+                                                Task { await di.medicineViewModel.addRandomMedicine(userId: email) }
                                         }
                                 }) {
                                         Image(systemName: "plus")
@@ -47,8 +46,8 @@ struct AllMedicinesView: View {
         }
         
         private var filteredMedicines: [Medicine] {
-                if filterText.isEmpty { return viewModel.medicines }
-                return viewModel.medicines.filter { $0.name.localizedCaseInsensitiveContains(filterText) }
+                if filterText.isEmpty { return di.medicineViewModel.medicines }
+                return di.medicineViewModel.medicines.filter { $0.name.localizedCaseInsensitiveContains(filterText) }
         }
 }
 
