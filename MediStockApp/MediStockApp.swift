@@ -14,14 +14,30 @@ struct MediStockApp: App {
         @State private var container: DIContainer
         
         init() {
-                FirebaseApp.configure()
+                
+                if FirebaseApp.app() == nil {
+                        FirebaseApp.configure() }
+                
                 _container = State(wrappedValue: DIContainer())
+                
+                //TODO: placer dans une view
+                requestNotificationPermission()
         }
         
         var body: some Scene {
                 WindowGroup {
                         RootView()
                                 .environment(container)
+                }
+        }
+        
+        func requestNotificationPermission() {
+                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+                        if granted {
+                                print("Permission Notifications accordée !")
+                        } else if let error = error {
+                                print("Erreur Permission : \(error.localizedDescription)")
+                        }
                 }
         }
 }

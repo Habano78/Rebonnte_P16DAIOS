@@ -1,11 +1,34 @@
 import Foundation
-import FirebaseFirestoreSwift
 
-import Foundation
+struct Medicine: Identifiable, Codable {
+        var id: String?
+        var name: String
+        var brand: String
+        var stock: Int
+        var aisle: String
+        var alertThreshold: Int
+        var category: MedicineCategory
+        var expirationDate: Date?
+        
+        var isLowStock: Bool {
+                stock <= alertThreshold
+        }
+        
+        var isExpired: Bool {
+                guard let expirationDate else { return false }
+                return expirationDate <= Date() // Périmé si la date est passée ou égale à maintenant
+            }
+}
 
-struct Medicine: Identifiable, Equatable, Sendable {
-    let id: String
-    var name: String
-    var stock: Int
-    var aisle: String
+
+enum MedicineCategory: String, CaseIterable, Identifiable, Codable {
+    case antibiotic = "Antibiotique"
+    case analgesic = "Analgésique"
+    case antiInflammatory = "Anti-inflammatoire"
+    case syrup = "Sirop"
+    case cream = "Crème/Pommade"
+    case vaccine = "Vaccin"
+    case other = "Autre"
+
+    var id: String { self.rawValue }
 }

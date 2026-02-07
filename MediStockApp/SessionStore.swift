@@ -18,28 +18,36 @@ enum SessionError: LocalizedError {
 @MainActor
 @Observable
 final class SessionStore {
-        // MARK: - State
-        var session: User?
-        var currentError: SessionError?
-        private var isListening = false
         
+        //MARK: Dependence
         private let authService: any AuthServiceProtocol
         
+        // MARK:  State
+        var session: User?
+        var currentError: SessionError?
+        var userEmail: String?
+        
+        private var isListening = false
+        
+        
+        //MARK: Init
         init(authService: any AuthServiceProtocol) {
                 self.authService = authService
-                // Le démarrage est sûr car contrôlé par isListening
                 self.listen()
         }
         
         // MARK: - Logic
         func listen() {
-                guard !isListening else { return } // Idempotence : évite les doublons
+                guard !isListening else { return }
                 isListening = true
-                print("📡 SessionStore commence l'écoute...")
+                
                 Task {
                         for await user in authService.userStream() {
-                                print("👤 SessionStore a reçu un utilisateur: \(user?.email ?? "nil")")
-                                self.session = user
+                                
+                                session = user
+                                userEmail = user?.email
+                                
+                                print("SessionStore a reçu un utilisateur: \(user?.email ?? "nil")")
                         }
                 }
         }
@@ -47,7 +55,11 @@ final class SessionStore {
         func signOut() {
                 do {
                         try authService.signOut()
+                        
+                        self.session = nil
+                        self.userEmail = nil
                         self.currentError = nil
+                        
                 } catch {
                         self.currentError = .signOutFailed(error)
                 }

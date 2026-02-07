@@ -14,13 +14,16 @@ struct AisleListView: View {
         //MARK: Dépendance
         @Environment(DIContainer.self) private var di
         
+        //MARK: Property
+        @State private var isShowingAddSheet = false
+        
         //MARK: Body
         var body: some View {
                 NavigationStack {
                         List {
                                 ForEach(di.medicineViewModel.aisles, id: \.self) { aisle in
                                         NavigationLink(destination: MedicineListView(aisle: aisle)) {
-                                                Text(aisle)
+                                                Text("Rayon : \(aisle)")
                                                         .font(.body)
                                         }
                                 }
@@ -28,22 +31,20 @@ struct AisleListView: View {
                         .navigationTitle("Rayons")
                         .toolbar {
                                 ToolbarItem(placement: .navigationBarTrailing) {
+                                        
                                         Button(action: {
-                                                if let userId = di.sessionStore.session?.id {
-                                                        Task { await di.medicineViewModel.addRandomMedicine(userId: userId) }
-                                                }
+                                                isShowingAddSheet=true
                                         }) {
                                                 Image(systemName: "plus")
                                         }
                                 }
+                        }
+                        .sheet(isPresented: $isShowingAddSheet) {
+                                AddMedicineView()
                         }
                         .task {
                                 await di.medicineViewModel.fetchMedicines()
                         }
                 }
         }
-}
-
-#Preview {
-        AisleListView()
 }

@@ -11,3 +11,9 @@ struct HistoryEntry: Identifiable, Equatable, Sendable {
     let timestamp: Date
 }
 
+enum HistoryAction: String, Codable {
+        case added = "Ajout Manuel"
+        case modified = "Modification"
+        case stockUpdate = "Mise à jour Stock"
+        case deleted = "Suppression"
+}

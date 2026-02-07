@@ -10,17 +10,14 @@ import Foundation
 import FirebaseFirestoreSwift
 
 // MARK: Protocol
-/// Définit les capacités de gestion des profils opérateurs du groupe Rebonnté.
+@MainActor
 protocol UserServiceProtocol: Sendable {
-        /// Enregistre ou met à jour les informations de l'opérateur (Email, Nom) dans Firestore.
         func syncUser(_ user: User) async throws
-        
-        /// Récupère les informations d'un opérateur via son identifiant pour enrichir l'historique.
         func fetchUser(id: String) async throws -> User?
 }
 
 // MARK: - Implementation
-final class FirebaseUserService: UserServiceProtocol {
+final class UserService: UserServiceProtocol {
         /// Référence à la base de données Firestore.
         private let db = Firestore.firestore()
         

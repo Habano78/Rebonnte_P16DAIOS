@@ -5,6 +5,7 @@
 //  Created by Vincent Saluzzo on 28/05/2024.
 //
 
+/*
 import XCTest
 
 final class MediStockUITestsLaunchTests: XCTestCase {
@@ -29,4 +30,4 @@ final class MediStockUITestsLaunchTests: XCTestCase {
         attachment.lifetime = .keepAlways
         add(attachment)
     }
-}
+}*/

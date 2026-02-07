@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,22 +13,16 @@
 		229893532F2CF468007CC660 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229893522F2CF468007CC660 /* UserService.swift */; };
 		229893552F2CF485007CC660 /* HistoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229893542F2CF485007CC660 /* HistoryService.swift */; };
 		2298937D2F31F1AE007CC660 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2298937C2F31F1AE007CC660 /* User.swift */; };
-		2298937F2F31FD9B007CC660 /* MedicineStockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2298937E2F31FD9B007CC660 /* MedicineStockViewModel.swift */; };
+		2298937F2F31FD9B007CC660 /* MedicineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2298937E2F31FD9B007CC660 /* MedicineViewModel.swift */; };
 		229893812F3202C0007CC660 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229893802F3202C0007CC660 /* AuthViewModel.swift */; };
-		229893832F320863007CC660 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229893822F320863007CC660 /* RootView.swift */; };
-		229893852F3211E1007CC660 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229893842F3211E1007CC660 /* MainTabView.swift */; };
-		229893872F321225007CC660 /* AisleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229893862F321225007CC660 /* AisleListView.swift */; };
-		229893892F32151D007CC660 /* MedicineListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229893882F32151D007CC660 /* MedicineListView.swift */; };
-		2298938B2F321792007CC660 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2298938A2F321792007CC660 /* LoginView.swift */; };
-		2298938D2F321802007CC660 /* AllMedicinesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2298938C2F321802007CC660 /* AllMedicinesView.swift */; };
-		2298938F2F32184E007CC660 /* MedicineDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2298938E2F32184E007CC660 /* MedicineDetailView.swift */; };
 		229893912F326932007CC660 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 229893902F326932007CC660 /* GoogleService-Info.plist */; };
 		229893922F326932007CC660 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 229893902F326932007CC660 /* GoogleService-Info.plist */; };
 		229893932F326932007CC660 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 229893902F326932007CC660 /* GoogleService-Info.plist */; };
+		229893A92F3752D2007CC660 /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229893A82F3752D2007CC660 /* ModelTests.swift */; };
+		229893AB2F376C97007CC660 /* SessionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229893AA2F376C97007CC660 /* SessionStoreTests.swift */; };
 		53E0D8972C06084700DE1134 /* MediStockApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8962C06084700DE1134 /* MediStockApp.swift */; };
 		53E0D89B2C06084900DE1134 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E0D89A2C06084900DE1134 /* Assets.xcassets */; };
 		53E0D89E2C06084900DE1134 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E0D89D2C06084900DE1134 /* Preview Assets.xcassets */; };
-		53E0D8A82C06084900DE1134 /* MediStockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8A72C06084900DE1134 /* MediStockTests.swift */; };
 		53E0D8B22C06084900DE1134 /* MediStockUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8B12C06084900DE1134 /* MediStockUITests.swift */; };
 		53E0D8B42C06084900DE1134 /* MediStockUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8B32C06084900DE1134 /* MediStockUITestsLaunchTests.swift */; };
 		53E0D8C22C06092E00DE1134 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 53E0D8C12C06092E00DE1134 /* FirebaseAnalytics */; };
@@ -71,22 +65,16 @@
 		229893522F2CF468007CC660 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		229893542F2CF485007CC660 /* HistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryService.swift; sourceTree = "<group>"; };
 		2298937C2F31F1AE007CC660 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		2298937E2F31FD9B007CC660 /* MedicineStockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicineStockViewModel.swift; sourceTree = "<group>"; };
+		2298937E2F31FD9B007CC660 /* MedicineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicineViewModel.swift; sourceTree = "<group>"; };
 		229893802F3202C0007CC660 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
-		229893822F320863007CC660 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		229893842F3211E1007CC660 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
-		229893862F321225007CC660 /* AisleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AisleListView.swift; sourceTree = "<group>"; };
-		229893882F32151D007CC660 /* MedicineListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicineListView.swift; sourceTree = "<group>"; };
-		2298938A2F321792007CC660 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		2298938C2F321802007CC660 /* AllMedicinesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllMedicinesView.swift; sourceTree = "<group>"; };
-		2298938E2F32184E007CC660 /* MedicineDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicineDetailView.swift; sourceTree = "<group>"; };
 		229893902F326932007CC660 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		229893A82F3752D2007CC660 /* ModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTests.swift; sourceTree = "<group>"; };
+		229893AA2F376C97007CC660 /* SessionStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStoreTests.swift; sourceTree = "<group>"; };
 		53E0D8932C06084700DE1134 /* MediStock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MediStock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E0D8962C06084700DE1134 /* MediStockApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockApp.swift; sourceTree = "<group>"; };
 		53E0D89A2C06084900DE1134 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		53E0D89D2C06084900DE1134 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		53E0D8A32C06084900DE1134 /* MediStockTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MediStockTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		53E0D8A72C06084900DE1134 /* MediStockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockTests.swift; sourceTree = "<group>"; };
 		53E0D8AD2C06084900DE1134 /* MediStockUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MediStockUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E0D8B12C06084900DE1134 /* MediStockUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockUITests.swift; sourceTree = "<group>"; };
 		53E0D8B32C06084900DE1134 /* MediStockUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -94,6 +82,15 @@
 		53E0D8DF2C0609B900DE1134 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
 		53E0D8E92C066F7A00DE1134 /* HistoryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryEntry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		229893962F353A67007CC660 /* MedicineViews */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = MedicineViews; sourceTree = "<group>"; };
+		229893972F353A83007CC660 /* AisleViews */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AisleViews; sourceTree = "<group>"; };
+		229893982F353A98007CC660 /* LoginViews */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = LoginViews; sourceTree = "<group>"; };
+		229893A12F36512F007CC660 /* HistoryViews */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = HistoryViews; sourceTree = "<group>"; };
+		229893AC2F3793E2007CC660 /* Mocks */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Mocks; sourceTree = "<group>"; };
+		229893B52F379508007CC660 /* ViewModelsTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ViewModelsTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		53E0D8902C06084700DE1134 /* Frameworks */ = {
@@ -134,7 +131,7 @@
 		229893472F2CEBD9007CC660 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				2298937E2F31FD9B007CC660 /* MedicineStockViewModel.swift */,
+				2298937E2F31FD9B007CC660 /* MedicineViewModel.swift */,
 				229893802F3202C0007CC660 /* AuthViewModel.swift */,
 			);
 			path = ViewModels;
@@ -156,7 +153,6 @@
 				229893502F2CF445007CC660 /* AuthService.swift */,
 				2298934A2F2CEDE6007CC660 /* MedicineService.swift */,
 				229893542F2CF485007CC660 /* HistoryService.swift */,
-				53E0D8DF2C0609B900DE1134 /* SessionStore.swift */,
 				229893522F2CF468007CC660 /* UserService.swift */,
 			);
 			path = "Services ";
@@ -165,13 +161,10 @@
 		2298934F2F2CEEBE007CC660 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				229893822F320863007CC660 /* RootView.swift */,
-				2298938A2F321792007CC660 /* LoginView.swift */,
-				229893842F3211E1007CC660 /* MainTabView.swift */,
-				229893862F321225007CC660 /* AisleListView.swift */,
-				229893882F32151D007CC660 /* MedicineListView.swift */,
-				2298938C2F321802007CC660 /* AllMedicinesView.swift */,
-				2298938E2F32184E007CC660 /* MedicineDetailView.swift */,
+				229893982F353A98007CC660 /* LoginViews */,
+				229893972F353A83007CC660 /* AisleViews */,
+				229893962F353A67007CC660 /* MedicineViews */,
+				229893A12F36512F007CC660 /* HistoryViews */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -208,6 +201,7 @@
 			children = (
 				53E0D8962C06084700DE1134 /* MediStockApp.swift */,
 				2298934C2F2CEE39007CC660 /* DIContainer.swift */,
+				53E0D8DF2C0609B900DE1134 /* SessionStore.swift */,
 			);
 			path = MediStockApp;
 			sourceTree = "<group>";
@@ -223,7 +217,10 @@
 		53E0D8A62C06084900DE1134 /* MediStockTests */ = {
 			isa = PBXGroup;
 			children = (
-				53E0D8A72C06084900DE1134 /* MediStockTests.swift */,
+				229893B52F379508007CC660 /* ViewModelsTests */,
+				229893AC2F3793E2007CC660 /* Mocks */,
+				229893A82F3752D2007CC660 /* ModelTests.swift */,
+				229893AA2F376C97007CC660 /* SessionStoreTests.swift */,
 			);
 			path = MediStockTests;
 			sourceTree = "<group>";
@@ -251,6 +248,12 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				229893962F353A67007CC660 /* MedicineViews */,
+				229893972F353A83007CC660 /* AisleViews */,
+				229893982F353A98007CC660 /* LoginViews */,
+				229893A12F36512F007CC660 /* HistoryViews */,
 			);
 			name = MediStock;
 			packageProductDependencies = (
@@ -282,6 +285,10 @@
 			);
 			dependencies = (
 				53E0D8A52C06084900DE1134 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				229893AC2F3793E2007CC660 /* Mocks */,
+				229893B52F379508007CC660 /* ViewModelsTests */,
 			);
 			name = MediStockTests;
 			productName = MediStockTests;
@@ -387,24 +394,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				229893812F3202C0007CC660 /* AuthViewModel.swift in Sources */,
-				2298937F2F31FD9B007CC660 /* MedicineStockViewModel.swift in Sources */,
+				2298937F2F31FD9B007CC660 /* MedicineViewModel.swift in Sources */,
 				53E0D8EA2C066F7A00DE1134 /* HistoryEntry.swift in Sources */,
-				229893832F320863007CC660 /* RootView.swift in Sources */,
-				229893852F3211E1007CC660 /* MainTabView.swift in Sources */,
 				53E0D8E02C0609B900DE1134 /* SessionStore.swift in Sources */,
 				229893532F2CF468007CC660 /* UserService.swift in Sources */,
 				53E0D8DC2C06099C00DE1134 /* Medicine.swift in Sources */,
 				2298934D2F2CEE39007CC660 /* DIContainer.swift in Sources */,
 				229893552F2CF485007CC660 /* HistoryService.swift in Sources */,
 				53E0D8972C06084700DE1134 /* MediStockApp.swift in Sources */,
-				229893872F321225007CC660 /* AisleListView.swift in Sources */,
 				2298934B2F2CEDE6007CC660 /* MedicineService.swift in Sources */,
-				2298938D2F321802007CC660 /* AllMedicinesView.swift in Sources */,
-				2298938F2F32184E007CC660 /* MedicineDetailView.swift in Sources */,
 				229893512F2CF445007CC660 /* AuthService.swift in Sources */,
-				2298938B2F321792007CC660 /* LoginView.swift in Sources */,
 				2298937D2F31F1AE007CC660 /* User.swift in Sources */,
-				229893892F32151D007CC660 /* MedicineListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,7 +412,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53E0D8A82C06084900DE1134 /* MediStockTests.swift in Sources */,
+				229893A92F3752D2007CC660 /* ModelTests.swift in Sources */,
+				229893AB2F376C97007CC660 /* SessionStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,6 +28,7 @@ enum AuthServiceError: Error, LocalizedError {
 }
 
 // MARK: - Protocol
+@MainActor
 protocol AuthServiceProtocol: Sendable {
         func userStream() -> AsyncStream<User?>
         func signIn(email: String, password: String) async throws -> User
@@ -38,7 +39,7 @@ protocol AuthServiceProtocol: Sendable {
 }
 
 // MARK: - Implementation
-final class FirebaseAuthService: AuthServiceProtocol {
+final class AuthService: AuthServiceProtocol {
         private let auth = Auth.auth()
         
         func userStream() -> AsyncStream<User?> {

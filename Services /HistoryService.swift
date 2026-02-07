@@ -10,16 +10,19 @@ import Foundation
 import FirebaseFirestoreSwift
 
 //MARK: Protocol
+@MainActor
 protocol HistoryServiceProtocol: Sendable {
-        func fetchHistory(for medicineId: String) async throws -> [HistoryEntry]
+        func fetchMedicineHistory(for medicineId: String) async throws -> [HistoryEntry]
+        func fetchAllHistory() async throws -> [HistoryEntry]
         func addEntry(_ entry: HistoryEntry) async throws
+        func addToHistory(action: String, medicineId: String, userEmail: String, details: String) async
 }
 
-//MARK: Implementation 
-final class FirebaseHistoryService: HistoryServiceProtocol {
+//MARK: Implementation
+final class HistoryService: HistoryServiceProtocol {
         private let db = Firestore.firestore()
         
-        func fetchHistory(for medicineId: String) async throws -> [HistoryEntry] {
+        func fetchMedicineHistory(for medicineId: String) async throws -> [HistoryEntry] {
                 let snapshot = try await db.collection("history")
                         .whereField("medicineId", isEqualTo: medicineId)
                         .order(by: "timestamp", descending: true)
@@ -31,9 +34,41 @@ final class FirebaseHistoryService: HistoryServiceProtocol {
                 }
         }
         
+        func fetchAllHistory() async throws -> [HistoryEntry] {
+                let snapshot = try await db.collection("history")
+                        .order(by: "timestamp", descending: true) // Tri chronologique global
+                        .limit(to: 50) // On limite aux 50 derniers pour la performance
+                        .getDocuments()
+                
+                return snapshot.documents.compactMap { doc in
+                        guard let dto = try? doc.data(as: HistoryEntryDTO.self) else { return nil }
+                        return HistoryEntry(dto: dto)
+                }
+        }
+        
         func addEntry(_ entry: HistoryEntry) async throws {
                 let dto = HistoryEntryDTO(from: entry)
                 try db.collection("history").addDocument(from: dto)
+        }
+        
+        func addToHistory(action: String, medicineId: String, userEmail: String, details: String) async {
+                // 1. On prépare les données du log
+                let data: [String: Any] = [
+                        "action": action,
+                        "medicineId": medicineId,
+                        "userEmail": userEmail,
+                        "details": details,
+                        "timestamp": Timestamp(date: Date()) // Firestore préfère les objets Timestamp
+                ]
+                
+                do {
+                        // 2. On ajoute un nouveau document avec un ID généré automatiquement
+                        try await db.collection("history").addDocument(data: data)
+                        print("Historique mis à jour : \(action)")
+                } catch {
+                        // En cas d'échec, on log l'erreur mais on ne bloque pas l'utilisateur
+                        print("Erreur historique : \(error.localizedDescription)")
+                }
         }
 }
 

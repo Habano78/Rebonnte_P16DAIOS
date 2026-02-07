@@ -11,10 +11,10 @@ struct LoginView: View {
         
         //MARK: depandence
         @Environment(DIContainer.self) private var di
-
-
+        
+        
         var body: some View {
-
+                
                 @Bindable var vm = di.authViewModel
                 
                 VStack(spacing: 20) {
@@ -39,15 +39,14 @@ struct LoginView: View {
                                 ProgressView()
                         } else {
                                 Button("Se connecter") {
+                                        
                                         Task { await di.authViewModel.signIn() }
                                 }
                                 .buttonStyle(.borderedProminent)
                                 
                                 Button("Créer un compte") {
-                                        Task {
-                                                print("Clic détecté : Lancement de signUp")
-                                                await di.authViewModel.signUp()
-                                        }
+                                        
+                                        Task { await di.authViewModel.signUp() }
                                 }
                         }
                 }

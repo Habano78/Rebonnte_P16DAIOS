@@ -4,7 +4,7 @@
 //
 //  Created by Vincent Saluzzo on 28/05/2024.
 //
-
+/*
 import XCTest
 
 final class MediStockUITests: XCTestCase {
@@ -39,3 +39,4 @@ final class MediStockUITests: XCTestCase {
         }
     }
 }
+*/

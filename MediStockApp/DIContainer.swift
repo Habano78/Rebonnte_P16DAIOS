@@ -21,14 +21,14 @@ final class DIContainer {
         
         /// ViewModels
         let authViewModel: AuthViewModel
-        let medicineViewModel: MedicineStockViewModel
+        let medicineViewModel: MedicineViewModel
         
         //MARK: Init
         init() {
-                let auth = FirebaseAuthService()
-                let medicine = FirebaseMedicineService()
-                let history = FirebaseHistoryService()
-                let user = FirebaseUserService()
+                let auth = AuthService()
+                let medicine = MedicineService()
+                let history = HistoryService()
+                let user = UserService()
                 
                 self.authService = auth
                 self.medicineService = medicine
@@ -40,7 +40,7 @@ final class DIContainer {
                 self.authViewModel = AuthViewModel(
                         authService: auth,
                         userService: user)
-                self.medicineViewModel = MedicineStockViewModel(
+                self.medicineViewModel = MedicineViewModel(
                         medicineService: medicine,
                         historyService: history,
                         authService: auth)
