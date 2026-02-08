@@ -28,6 +28,9 @@ struct MediStockApp: App {
                 WindowGroup {
                         RootView()
                                 .environment(container)
+                                .onAppear {
+                                                container.sessionStore.listen()
+                                            }
                 }
         }
         

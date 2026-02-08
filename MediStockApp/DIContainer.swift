@@ -11,11 +11,13 @@ import Observation
 @Observable
 @MainActor
 final class DIContainer {
+        
         /// Services
         let authService: any AuthServiceProtocol
         let medicineService: any MedicineServiceProtocol
         let historyService: any HistoryServiceProtocol
         let userService: any UserServiceProtocol
+        let notificationService: any NotificationServiceProtocol
         
         let sessionStore:  SessionStore
         
@@ -29,11 +31,13 @@ final class DIContainer {
                 let medicine = MedicineService()
                 let history = HistoryService()
                 let user = UserService()
+                let notification = NotificationService()
                 
                 self.authService = auth
                 self.medicineService = medicine
                 self.historyService = history
                 self.userService = user
+                self.notificationService = notification
 
                 self.sessionStore = SessionStore(authService: auth)
                 

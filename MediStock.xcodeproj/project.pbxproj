@@ -18,6 +18,7 @@
 		229893912F326932007CC660 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 229893902F326932007CC660 /* GoogleService-Info.plist */; };
 		229893922F326932007CC660 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 229893902F326932007CC660 /* GoogleService-Info.plist */; };
 		229893932F326932007CC660 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 229893902F326932007CC660 /* GoogleService-Info.plist */; };
+		229893BA2F38DAEC007CC660 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229893B92F38DAE8007CC660 /* NotificationService.swift */; };
 		53E0D8972C06084700DE1134 /* MediStockApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8962C06084700DE1134 /* MediStockApp.swift */; };
 		53E0D89B2C06084900DE1134 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E0D89A2C06084900DE1134 /* Assets.xcassets */; };
 		53E0D89E2C06084900DE1134 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E0D89D2C06084900DE1134 /* Preview Assets.xcassets */; };
@@ -64,6 +65,7 @@
 		2298937E2F31FD9B007CC660 /* MedicineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicineViewModel.swift; sourceTree = "<group>"; };
 		229893802F3202C0007CC660 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		229893902F326932007CC660 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		229893B92F38DAE8007CC660 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		53E0D8932C06084700DE1134 /* MediStock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MediStock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E0D8962C06084700DE1134 /* MediStockApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockApp.swift; sourceTree = "<group>"; };
 		53E0D89A2C06084900DE1134 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				2298934A2F2CEDE6007CC660 /* MedicineService.swift */,
 				229893542F2CF485007CC660 /* HistoryService.swift */,
 				229893522F2CF468007CC660 /* UserService.swift */,
+				229893B92F38DAE8007CC660 /* NotificationService.swift */,
 			);
 			path = "Services ";
 			sourceTree = "<group>";
@@ -379,6 +382,7 @@
 				229893812F3202C0007CC660 /* AuthViewModel.swift in Sources */,
 				2298937F2F31FD9B007CC660 /* MedicineViewModel.swift in Sources */,
 				53E0D8EA2C066F7A00DE1134 /* HistoryEntry.swift in Sources */,
+				229893BA2F38DAEC007CC660 /* NotificationService.swift in Sources */,
 				53E0D8E02C0609B900DE1134 /* SessionStore.swift in Sources */,
 				229893532F2CF468007CC660 /* UserService.swift in Sources */,
 				53E0D8DC2C06099C00DE1134 /* Medicine.swift in Sources */,

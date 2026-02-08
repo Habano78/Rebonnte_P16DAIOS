@@ -10,17 +10,20 @@ import SwiftUI
 struct RootView: View {
         
         //MARK: Dependence
-        @Environment(DIContainer.self) private var di
-        
+        @Environment(DIContainer.self) private var container
         
         //MARK: Body
         var body: some View {
                 Group {
-                        if di.sessionStore.session != nil {
-                                MainTabView()
+                        if container.sessionStore.session != nil {
+                                MedicineListView()
                         } else {
                                 LoginView()
                         }
+                }
+                .animation(.easeInOut, value: container.sessionStore.session != nil)
+                .task {
+                        _ = await container.notificationService.requestPermission()
                 }
         }
 }
