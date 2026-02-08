@@ -16,7 +16,7 @@ struct RootView: View {
         var body: some View {
                 Group {
                         if container.sessionStore.session != nil {
-                                MedicineListView()
+                                MedicineListView(aisle: "Aisle 1")
                         } else {
                                 LoginView()
                         }

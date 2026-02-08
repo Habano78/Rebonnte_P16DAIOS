@@ -20,8 +20,6 @@ struct MediStockApp: App {
                 
                 _container = State(wrappedValue: DIContainer())
                 
-                //TODO: placer dans une view
-                requestNotificationPermission()
         }
         
         var body: some Scene {
@@ -29,18 +27,8 @@ struct MediStockApp: App {
                         RootView()
                                 .environment(container)
                                 .onAppear {
-                                                container.sessionStore.listen()
-                                            }
-                }
-        }
-        
-        func requestNotificationPermission() {
-                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-                        if granted {
-                                print("Permission Notifications accordée !")
-                        } else if let error = error {
-                                print("Erreur Permission : \(error.localizedDescription)")
-                        }
+                                        container.sessionStore.listen()
+                                }
                 }
         }
 }

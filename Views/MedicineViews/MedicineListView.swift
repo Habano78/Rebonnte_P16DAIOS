@@ -14,7 +14,7 @@ struct MedicineListView: View {
         @State private var isShowingAddSheet = false
         
         //MARK: Properties
-        let aisle: String = "Principal"
+        let aisle: String
         
         // MARK: Computed Properties
         private var sortedAisleMedicines: [Medicine] {
