@@ -33,7 +33,6 @@ final class SessionStore {
         //MARK: Init
         init(authService: any AuthServiceProtocol) {
                 self.authService = authService
-                self.listen()
         }
         
         // MARK: - Logic
@@ -43,10 +42,8 @@ final class SessionStore {
                 
                 Task {
                         for await user in authService.userStream() {
-                                
                                 session = user
                                 userEmail = user?.email
-                                
                                 print("SessionStore a reçu un utilisateur: \(user?.email ?? "nil")")
                         }
                 }
