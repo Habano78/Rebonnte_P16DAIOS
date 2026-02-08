@@ -1,6 +1,13 @@
 - name: Run tests
   run: |
     set -o pipefail
+    set -x
+
+    echo "🧹 Reset simulators"
+    xcrun simctl shutdown all || true
+    xcrun simctl erase all || true
+
+    echo "🚀 Running tests"
 
     xcodebuild test \
       -project MediStock.xcodeproj \
@@ -16,16 +23,19 @@
       CODE_SIGNING_ALLOWED=NO \
       -skipPackagePluginValidation \
       -skipMacroValidation \
-      | xcbeautify
+      | tee raw.log | xcbeautify
 
     exit_code=${PIPESTATUS[0]}
     echo "xcodebuild exit code: $exit_code"
 
     if [ "$exit_code" -ne 0 ] && [ "$exit_code" -ne 65 ]; then
+      echo "Real failure"
       exit $exit_code
     fi
 
     if [ "$exit_code" -eq 65 ]; then
-      echo "⚠️ Ignoring Xcode 16 exit 65 (known CI bug)"
+      echo "Ignoring Xcode 16 exit 65 (known CI bug)"
       exit 0
     fi
+
+    echo "Tests succeeded"
