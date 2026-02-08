@@ -45,24 +45,24 @@ struct MedicineViewModelTests {
         
         @Test("Échec de fetchMedicines et gestion de l'état")
         func testFetchMedicinesFailure() async {
-            // GIVEN
-            let mockService = MockMedicineService()
-            mockService.shouldFail = true
-            
-            let vm = MedicineViewModel(
-                medicineService: mockService,
-                historyService: MockHistoryService(),
-                authService: MockAuthService()
-            )
-            
-            #expect(vm.medicines.isEmpty)
-
-            // WHEN
-            await vm.fetchMedicines()
-
-            // THEN
-            #expect(vm.medicines.isEmpty)
-            #expect(vm.isLoading == false, "L'indicateur de chargement doit s'arrêter même si le fetch échoue.")
+                // GIVEN
+                let mockService = MockMedicineService()
+                mockService.shouldFail = true
+                
+                let vm = MedicineViewModel(
+                        medicineService: mockService,
+                        historyService: MockHistoryService(),
+                        authService: MockAuthService()
+                )
+                
+                #expect(vm.medicines.isEmpty)
+                
+                // WHEN
+                await vm.fetchMedicines()
+                
+                // THEN
+                #expect(vm.medicines.isEmpty)
+                #expect(vm.isLoading == false, "L'indicateur de chargement doit s'arrêter même si le fetch échoue.")
         }
         
         @Test("Ajout réussi d'un médicament")
@@ -70,6 +70,7 @@ struct MedicineViewModelTests {
                 // GIVEN
                 let mockService = MockMedicineService()
                 let mockHistory = MockHistoryService()
+                
                 let vm = MedicineViewModel(
                         medicineService: mockService,
                         historyService: mockHistory,
@@ -77,8 +78,9 @@ struct MedicineViewModelTests {
                 )
                 
                 let newMed = Medicine(id: "new_1", name: "Aspi", brand: "Teva", stock: 30, aisle: "A1", alertThreshold: 5, category: .other)
+                mockService.medicinesToReturn = [newMed]
                 let userEmail = "admin@medistock.com"
-                
+        
                 // WHEN
                 await vm.addMedicine(newMed, userId: userEmail)
                 
@@ -181,9 +183,9 @@ struct MedicineViewModelTests {
         
         @Test("Échec de la mise à jour et rollback des données")
         func testUpdateMedicineRollback() async {
-                // --- GIVEN ---
+                // GIVEN
                 let mockService = MockMedicineService()
-                mockService.shouldFail = true // On force l'échec
+                mockService.shouldFail = true
                 
                 let vm = MedicineViewModel(medicineService: mockService, historyService: MockHistoryService(), authService: MockAuthService())
                 
@@ -192,11 +194,12 @@ struct MedicineViewModelTests {
                 
                 let updatedMed = Medicine(id: "1", name: "Modifié", brand: "S", stock: 10, aisle: "A1", alertThreshold: 5, category: .analgesic)
                 
-                // --- WHEN ---
+                // WHEN
                 await vm.updateMedicine(updatedMed, userEmail: "admin@test.com")
                 
-                // --- THEN ---
-                #expect(vm.medicines.first?.name == "Doliprane", "Le nom aurait dû revenir à l'original après l'échec.")
+                // THEN
+                #expect(vm.medicines.first?.name == "Doliprane", "Le nom aurait dû revenir à l'original.")
+                #expect(vm.errorMessage == "Échec de la mise à jour du médicament.")
         }
         @Test("Réussite de la suppression d'un médicament")
         func testDeleteMedicineSuccess() async {
@@ -279,11 +282,31 @@ struct MedicineViewModelTests {
                         authService: MockAuthService()
                 )
                 
-                // --- WHEN ---
+                // WHEN
                 await vm.fetchMedicineHistory(for: "any_id")
                 
-                // --- THEN ---
+                // THEN
                 #expect(vm.errorMessage == "Impossible de récupérer l'historique spécifique.")
+        }
+        
+        @Test("Vérifier que fetchMedicines remplit errorMessage en cas d'échec")
+        func testFetchMedicinesSetsErrorMessage() async {
+                // GIVEN
+                let mockService = MockMedicineService()
+                mockService.shouldFail = true
+                
+                let vm = MedicineViewModel(
+                        medicineService: mockService,
+                        historyService: MockHistoryService(),
+                        authService: MockAuthService()
+                )
+                
+                // WHEN
+                await vm.fetchMedicines()
+                
+                // THEN
+                #expect(vm.errorMessage == "Erreur lors de la récupération des médicaments.")
+                #expect(vm.isLoading == false, "Le chargement doit s'arrêter")
         }
         
 }

@@ -8,25 +8,6 @@
 import Foundation
 @preconcurrency import FirebaseAuth
 
-// MARK: - Erreurs d'Authentification
-enum AuthServiceError: Error, LocalizedError {
-        case invalidEmail
-        case weakPassword
-        case userNotFound
-        case wrongPassword
-        case unknown(String)
-        
-        var errorDescription: String? {
-                switch self {
-                case .invalidEmail: return "L'adresse email est mal formée."
-                case .weakPassword: return "Le mot de passe est trop simple."
-                case .userNotFound: return "Aucun compte ne correspond à cet email."
-                case .wrongPassword: return "Le mot de passe est incorrect."
-                case .unknown(let message): return message
-                }
-        }
-}
-
 // MARK: - Protocol
 @MainActor
 protocol AuthServiceProtocol: Sendable {
@@ -99,6 +80,25 @@ final class AuthService: AuthServiceProtocol {
                 case .wrongPassword: return .wrongPassword
                 case .userNotFound: return .userNotFound
                 default: return .unknown(error.localizedDescription)
+                }
+        }
+}
+
+// MARK: Erreurs d'Authentification
+enum AuthServiceError: Error, LocalizedError {
+        case invalidEmail
+        case weakPassword
+        case userNotFound
+        case wrongPassword
+        case unknown(String)
+        
+        var errorDescription: String? {
+                switch self {
+                case .invalidEmail: return "L'adresse email est mal formée."
+                case .weakPassword: return "Le mot de passe est trop simple."
+                case .userNotFound: return "Aucun compte ne correspond à cet email."
+                case .wrongPassword: return "Le mot de passe est incorrect."
+                case .unknown(let message): return message
                 }
         }
 }

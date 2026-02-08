@@ -33,25 +33,22 @@ final class MedicineViewModel {
                 self.authService = authService
         }
         
-        // MARK: - Fetching Logic
-        
-        /// Charge la liste complète et calcule les rayons
+        // MARK: Fetching Logic
         func fetchMedicines() async {
                 isLoading = true
+                errorMessage = nil
                 do {
                         let fetched = try await medicineService.fetchMedicines()
                         self.medicines = fetched
-                        // Recalcul des rayons uniques pour l'UI
                         self.aisles = Array(Set(fetched.map { $0.aisle })).sorted()
                 } catch {
-                        print("Erreur fetch: \(error.localizedDescription)")
+                        self.errorMessage = "Erreur lors de la récupération des médicaments."
                 }
                 isLoading = false
         }
         
-        // MARK: - CRUD Operations (Optimistic Updates)
         
-        /// Ajoute un médicament avec gestion de rollback
+        // MARK: - CRUD Operations (Optimistic Updates)
         func addMedicine(_ medicine: Medicine, userId: String) async {
                 let oldMedicines = self.medicines
                 let oldAisles = self.aisles
@@ -119,6 +116,8 @@ final class MedicineViewModel {
         /// Met à jour une fiche complète
         func updateMedicine(_ medicine: Medicine, userEmail: String) async {
                 let oldMedicines = self.medicines
+                errorMessage = nil
+                
                 if let index = medicines.firstIndex(where: { $0.id == medicine.id }) {
                         self.medicines[index] = medicine
                 }
@@ -137,6 +136,7 @@ final class MedicineViewModel {
                         await fetchMedicines()
                 } catch {
                         self.medicines = oldMedicines
+                        self.errorMessage = "Échec de la mise à jour du médicament."
                 }
         }
         
