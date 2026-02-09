@@ -48,14 +48,6 @@ jobs:
             -skipMacroValidation \
             | xcbeautify
 
-      - name: Process Test Results
-        uses: sumeruchat/xcresulttool@f1e0a7e6315385f32a94ef9e6105a6b567ae59e1
-        with:
-          path: test-results.xcresult
-          token: ${{ secrets.GITHUB_TOKEN }}
-        if: success() || failure()
-        continue-on-error: true
-
       - name: Upload test bundle
         uses: actions/upload-artifact@v4
         with:
