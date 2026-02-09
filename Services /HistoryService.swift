@@ -36,8 +36,8 @@ final class HistoryService: HistoryServiceProtocol {
         
         func fetchAllHistory() async throws -> [HistoryEntry] {
                 let snapshot = try await db.collection("history")
-                        .order(by: "timestamp", descending: true) // Tri chronologique global
-                        .limit(to: 50) // On limite aux 50 derniers pour la performance
+                        .order(by: "timestamp", descending: true)
+                        .limit(to: 50)
                         .getDocuments()
                 
                 return snapshot.documents.compactMap { doc in
@@ -52,21 +52,18 @@ final class HistoryService: HistoryServiceProtocol {
         }
         
         func addToHistory(action: String, medicineId: String, userEmail: String, details: String) async {
-                // 1. On prépare les données du log
                 let data: [String: Any] = [
                         "action": action,
                         "medicineId": medicineId,
                         "userEmail": userEmail,
                         "details": details,
-                        "timestamp": Timestamp(date: Date()) // Firestore préfère les objets Timestamp
+                        "timestamp": Timestamp(date: Date())
                 ]
                 
                 do {
-                        // 2. On ajoute un nouveau document avec un ID généré automatiquement
                         try await db.collection("history").addDocument(data: data)
                         print("Historique mis à jour : \(action)")
                 } catch {
-                        // En cas d'échec, on log l'erreur mais on ne bloque pas l'utilisateur
                         print("Erreur historique : \(error.localizedDescription)")
                 }
         }

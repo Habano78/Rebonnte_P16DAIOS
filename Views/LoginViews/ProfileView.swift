@@ -9,20 +9,18 @@ import SwiftUI
 
 struct ProfileView: View {
         
-        // MARK: - Dependences
+        // MARK: Dependences
         @Environment(DIContainer.self) private var di
         
-        // MARK: - Body
+        // MARK: Body
         var body: some View {
                 NavigationStack {
                         Form {
-                                // Section Information Utilisateur
                                 Section("Mon Profil") {
                                         LabeledContent("Email") {
                                                 Text(di.sessionStore.userEmail ?? "Inconnu")
                                                         .foregroundColor(.secondary)
                                         }
-                                        // On peut imaginer ici d'autres infos comme le rôle (Admin/Opérateur)
                                         LabeledContent("Rôle", value: "Administrateur")
                                 }
                                 

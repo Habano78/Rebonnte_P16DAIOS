@@ -15,7 +15,7 @@ struct EditMedicineView: View {
         
         let medicine: Medicine
         
-        // MARK: - States
+        // MARK: States
         @State private var name: String
         @State private var brand: String
         @State private var category: MedicineCategory
@@ -23,7 +23,7 @@ struct EditMedicineView: View {
         @State private var alertThreshold: Int
         @State private var aisle: String
         
-        // MARK: - Init
+        // MARK: Init
         init(medicine: Medicine) {
                 self.medicine = medicine
                 _name = State(initialValue: medicine.name)
@@ -34,6 +34,7 @@ struct EditMedicineView: View {
                 _aisle = State(initialValue: medicine.aisle)
         }
         
+        //MARK: Body
         var body: some View {
                 NavigationStack {
                         Form {

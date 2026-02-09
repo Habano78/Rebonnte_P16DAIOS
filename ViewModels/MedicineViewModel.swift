@@ -33,15 +33,13 @@ final class MedicineViewModel {
                 self.authService = authService
         }
         
-        // MARK: - Fetching Logic
+        // MARK: Fetching Logic
         
-        /// Charge la liste complète et calcule les rayons
         func fetchMedicines() async {
                 isLoading = true
                 do {
                         let fetched = try await medicineService.fetchMedicines()
                         self.medicines = fetched
-                        // Recalcul des rayons uniques pour l'UI
                         self.aisles = Array(Set(fetched.map { $0.aisle })).sorted()
                 } catch {
                         print("Erreur fetch: \(error.localizedDescription)")
@@ -49,14 +47,10 @@ final class MedicineViewModel {
                 isLoading = false
         }
         
-        // MARK: - CRUD Operations (Optimistic Updates)
-        
-        /// Ajoute un médicament avec gestion de rollback
         func addMedicine(_ medicine: Medicine, userId: String) async {
                 let oldMedicines = self.medicines
                 let oldAisles = self.aisles
-                
-                // Mise à jour locale immédiate
+              
                 self.medicines.append(medicine)
                 self.aisles = Array(Set(self.medicines.map { $0.aisle })).sorted()
                 
@@ -73,13 +67,11 @@ final class MedicineViewModel {
                         )
                         try await historyService.addEntry(entry)
                 } catch {
-                        // Rollback si échec
                         self.medicines = oldMedicines
                         self.aisles = oldAisles
                 }
         }
         
-        /// Met à jour uniquement le stock
         func updateStock(medicineId: String, newStock: Int, userId: String) async {
                 guard let index = medicines.firstIndex(where: { $0.id == medicineId }) else { return }
                 let oldStock = medicines[index].stock
@@ -100,7 +92,6 @@ final class MedicineViewModel {
                 }
         }
         
-        /// Supprime un médicament
         func deleteMedicine(id: String) async {
                 let oldMedicines = self.medicines
                 let oldAisles = self.aisles
@@ -116,7 +107,6 @@ final class MedicineViewModel {
                 }
         }
         
-        /// Met à jour une fiche complète
         func updateMedicine(_ medicine: Medicine, userEmail: String) async {
                 let oldMedicines = self.medicines
                 if let index = medicines.firstIndex(where: { $0.id == medicine.id }) {
@@ -141,7 +131,7 @@ final class MedicineViewModel {
         }
         
         // MARK: History
-        /// Récupère l'historique spécifique
+        
         func fetchMedicineHistory(for medicineId: String) async {
                 errorMessage = nil
                 do {
@@ -151,7 +141,7 @@ final class MedicineViewModel {
                 }
         }
         
-        /// Récupère l'historique global
+        
         func fetchAllHistory() async {
                 isLoading = true
                 errorMessage = nil
