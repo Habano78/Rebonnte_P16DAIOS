@@ -13,7 +13,7 @@ import Foundation
 @Suite("Tests du AuthViexwModel")
 @MainActor
 struct AuthViewModelTests {
-        //MARK: Tests Authentification Service
+
         
         @Test("Connexion réussie")
         func testSignInSuccess() async {

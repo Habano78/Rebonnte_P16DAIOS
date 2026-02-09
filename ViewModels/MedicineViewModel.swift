@@ -126,12 +126,14 @@ final class MedicineViewModel {
         // MARK: - Optimistic Updates
         
         func addMedicine(_ medicine: Medicine, userId: String) async {
+                // Optimistic Update : Ajout local
                 self.medicines.append(medicine)
                 updateAisles()
                 
                 do {
                         try await medicineService.saveMedicine(medicine)
                         
+                        // Historique
                         let entry = HistoryEntry(
                                 id: UUID().uuidString,
                                 medicineId: medicine.id ?? "",
@@ -142,11 +144,12 @@ final class MedicineViewModel {
                         )
                         try await historyService.addEntry(entry)
                         
-                        // await fetchMedicines(userId: userId)
                 } catch {
-                        self.errorMessage = "Erreur lors de l'ajout (sauvegarde échouée)."
-                        
-                        await fetchMedicines(userId: userId)
+                        self.errorMessage = "Erreur lors de l'ajout."
+                        if let index = medicines.firstIndex(where: { $0.id == medicine.id }) {
+                                medicines.remove(at: index)
+                                updateAisles()
+                        }
                 }
         }
         
@@ -155,7 +158,6 @@ final class MedicineViewModel {
                 let oldStock = medicines[index].stock
                 guard oldStock != newStock else { return }
                 
-                // Mise à jour locale
                 medicines[index].stock = newStock
                 
                 do {
@@ -179,7 +181,6 @@ final class MedicineViewModel {
                 let medicineName = medicineToDelete.name
                 let medicineAisle = medicineToDelete.aisle
                 
-                
                 if let index = medicines.firstIndex(where: { $0.id == id }) {
                         medicines.remove(at: index)
                         updateAisles()
@@ -200,15 +201,20 @@ final class MedicineViewModel {
                         
                 } catch {
                         self.errorMessage = "Erreur lors de la suppression."
-                
-                        await fetchMedicines(userId: userEmail)
-                }
-        }
-        func updateMedicine(_ medicine: Medicine, userEmail: String) async {
-                if let index = medicines.firstIndex(where: { $0.id == medicine.id }) {
-                        self.medicines[index] = medicine
+                        self.medicines.append(medicineToDelete)
                         updateAisles()
                 }
+        }
+        
+        // Dans MedicineStockViewModel.swift
+        
+        func updateMedicine(_ medicine: Medicine, userEmail: String) async {
+                guard let index = medicines.firstIndex(where: { $0.id == medicine.id }) else { return }
+                
+                let oldMedicine = medicines[index]
+                
+                self.medicines[index] = medicine
+                updateAisles()
                 
                 do {
                         try await medicineService.saveMedicine(medicine)
@@ -222,8 +228,12 @@ final class MedicineViewModel {
                                 timestamp: Date()
                         )
                         try await historyService.addEntry(entry)
+                        
                 } catch {
                         self.errorMessage = "Erreur modification."
+                        
+                        self.medicines[index] = oldMedicine
+                        updateAisles()
                 }
         }
         
