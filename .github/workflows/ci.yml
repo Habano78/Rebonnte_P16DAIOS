@@ -24,7 +24,7 @@ jobs:
             -project MediStock.xcodeproj \
             -scheme MediStock \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
             -derivedDataPath DerivedData \
             -resultBundlePath test-results.xcresult \
             CODE_SIGN_IDENTITY="" \
