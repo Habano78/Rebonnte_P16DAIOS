@@ -6,30 +6,38 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: macos-15 # Ensure you are using Sequoia
+    runs-on: macos-latest
 
-    steps:
-      - name: Checkout repository
+    - name: Checkout
         uses: actions/checkout@v4
-
-      # Add this step to explicitly select Xcode 16 if available
-      - name: Set Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_16.1.app || sudo xcode-select -s /Applications/Xcode_16.0.app
-
+      
+      - name: Show environment
+        run: |
+          echo "Xcode version:"
+          xcodebuild -version
+          echo "\nAvailable simulators:"
+          xcrun simctl list devices available | grep "iPhone"
+      
+      - name: Install dependencies
+        run: |
+          if [ -f Podfile ]; then
+            echo "Installing CocoaPods dependencies..."
+            sudo gem install cocoapods
+            pod install
+          fi
+          brew install xcbeautify
+      
       - name: Clean DerivedData
         run: rm -rf ~/Library/Developer/Xcode/DerivedData
-
-      - name: Install xcbeautify
-        run: brew install xcbeautify
 
       - name: Run tests
         run: |
           set -o pipefail
           xcodebuild test \
-            -project MediStock.xcodeproj \
-            -scheme MediStock \
+            -project EPCollaboratif.xcodeproj \
+            -scheme EPCollaboratif \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
             -derivedDataPath DerivedData \
             -resultBundlePath test-results.xcresult \
             CODE_SIGN_IDENTITY="" \
@@ -39,3 +47,17 @@ jobs:
             -skipPackagePluginValidation \
             -skipMacroValidation \
             | xcbeautify
+      - name: Process Test Results
+        uses: kishikawakatsumi/xcresulttool@v1
+        with:
+          path: test-results.xcresult
+          token: ${{ secrets.GITHUB_TOKEN }}
+        if: success() || failure()
+        continue-on-error: true
+
+      - name: Upload test bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results.xcresult
+        if: always()
