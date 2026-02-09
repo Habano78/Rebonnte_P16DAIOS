@@ -1,32 +1,28 @@
 name: iOS Build and Test
-
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build-and-test:
-    runs-on: macos-15
+    runs-on: macos-14
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Installer l'outil de formatage des logs
-      - name: Install xcbeautify
-        run: brew install xcbeautify
+      - name: Clean DerivedData
+        run: rm -rf ~/Library/Developer/Xcode/DerivedData
 
       - name: Run tests
         run: |
           set -o pipefail
           xcodebuild test \
-            -project MediStock.xcodeproj \
-            -scheme MediStock \
+            -project EPCollaboratif.xcodeproj \
+            -scheme EPCollaboratif \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
-            -only-testing:MediStockTests \
+            -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
             -derivedDataPath DerivedData \
             -resultBundlePath test-results.xcresult \
             CODE_SIGN_IDENTITY="" \
@@ -36,19 +32,17 @@ jobs:
             -skipPackagePluginValidation \
             -skipMacroValidation \
             | xcbeautify
-
       - name: Process Test Results
-        if: success() || failure()
         uses: kishikawakatsumi/xcresulttool@v1
         with:
           path: test-results.xcresult
           token: ${{ secrets.GITHUB_TOKEN }}
-          show-passed-tests: false
+        if: success() || failure()
         continue-on-error: true
 
       - name: Upload test bundle
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: test-results.xcresult
+        if: always()
