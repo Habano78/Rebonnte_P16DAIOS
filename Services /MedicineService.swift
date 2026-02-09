@@ -24,9 +24,10 @@ final class MedicineService: MedicineServiceProtocol {
         
         func fetchMedicines() async throws -> [Medicine] {
                 let snapshot = try await db.collection("medicines").getDocuments()
-                return snapshot.documents.compactMap { doc in
+                
+                return snapshot.documents.compactMap { doc -> Medicine? in
                         guard let dto = try? doc.data(as: MedicineDTO.self) else { return nil }
-                        return Medicine(dto: dto)
+                        return dto.toModel()
                 }
         }
         
@@ -67,15 +68,17 @@ private struct MedicineDTO: Codable {
                 self.category = model.category
                 self.expirationDate = model.expirationDate
         }
-}
-private extension Medicine {
-        init(dto: MedicineDTO) {
-                self.init(id: dto.id ?? UUID().uuidString,
-                          name: dto.name,
-                          brand: dto.brand,
-                          stock: dto.stock,
-                          aisle: dto.aisle,
-                          alertThreshold: dto.alertThreshold,
-                          category: dto.category)
+        
+        func toModel() -> Medicine {
+                Medicine(
+                        id: id ?? UUID().uuidString,
+                        name: name,
+                        brand: brand,
+                        stock: stock,
+                        aisle: aisle,
+                        alertThreshold: alertThreshold,
+                        category: category,
+                        expirationDate: expirationDate
+                )
         }
 }

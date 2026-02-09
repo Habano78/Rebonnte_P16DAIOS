@@ -209,9 +209,9 @@
 		53E0D8A62C06084900DE1134 /* MediStockTests */ = {
 			isa = PBXGroup;
 			children = (
+				229893AC2F3793E2007CC660 /* Mocks */,
 				229893E52F3906B5007CC660 /* ModelTests */,
 				229893B52F379508007CC660 /* ViewModelsTests */,
-				229893AC2F3793E2007CC660 /* Mocks */,
 			);
 			path = MediStockTests;
 			sourceTree = "<group>";

@@ -1,7 +1,7 @@
 import Foundation
 
 struct Medicine: Identifiable, Codable {
-        var id: String?
+        let id: String?
         var name: String
         var brand: String
         var stock: Int
@@ -16,7 +16,7 @@ struct Medicine: Identifiable, Codable {
         
         var isExpired: Bool {
                 guard let expirationDate else { return false }
-                return expirationDate <= Date() // Périmé si la date est passée ou égale à maintenant
+                return expirationDate <= Date()
             }
 }
 

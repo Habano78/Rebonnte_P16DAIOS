@@ -27,6 +27,7 @@ final class SessionStore {
         var currentError: SessionError?
         var userEmail: String?
         
+        var isLoading = true
         private var isListening = false
         
         
@@ -43,11 +44,9 @@ final class SessionStore {
                 
                 Task {
                         for await user in authService.userStream() {
-                                
-                                session = user
-                                userEmail = user?.email
-                                
-                                print("SessionStore a reçu un utilisateur: \(user?.email ?? "nil")")
+                                self.session = user
+                                self.userEmail = user?.email
+                                self.isLoading = false
                         }
                 }
         }
