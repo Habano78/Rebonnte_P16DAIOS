@@ -6,23 +6,19 @@ on:
 
 jobs:
   build-and-test:
-    # CHANGE 1: Update to macos-15 to get Xcode 16 support by default
-    runs-on: macos-15
+    runs-on: macos-15 # Ensure you are using Sequoia
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # CHANGE 2 (Optional but Recommended): Explicitly set Xcode version
-      # This ensures you don't accidentally run on a beta or older minor version.
+      # Add this step to explicitly select Xcode 16 if available
       - name: Set Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+        run: sudo xcode-select -s /Applications/Xcode_16.1.app || sudo xcode-select -s /Applications/Xcode_16.0.app
 
       - name: Clean DerivedData
         run: rm -rf ~/Library/Developer/Xcode/DerivedData
 
-      # CHANGE 3: Install xcbeautify
-      # It is often not pre-installed on bare runners. Installing it ensures the pipe doesn't fail.
       - name: Install xcbeautify
         run: brew install xcbeautify
 
@@ -33,7 +29,7 @@ jobs:
             -project MediStock.xcodeproj \
             -scheme MediStock \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
             -derivedDataPath DerivedData \
             -resultBundlePath test-results.xcresult \
             CODE_SIGN_IDENTITY="" \
@@ -43,18 +39,3 @@ jobs:
             -skipPackagePluginValidation \
             -skipMacroValidation \
             | xcbeautify
-
-      - name: Process Test Results
-        uses: kishikawakatsumi/xcresulttool@v1
-        with:
-          path: test-results.xcresult
-          token: ${{ secrets.GITHUB_TOKEN }}
-        if: success() || failure()
-        continue-on-error: true
-
-      - name: Upload test bundle
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: test-results.xcresult
-        if: always()
