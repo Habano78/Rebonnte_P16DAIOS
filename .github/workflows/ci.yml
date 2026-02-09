@@ -19,7 +19,7 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild test \
-            -project MediSock.xcodeproj \
+            -project MediStock.xcodeproj \
             -scheme MediStock \
             -sdk iphonesimulator \
             -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
