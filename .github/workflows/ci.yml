@@ -6,14 +6,25 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: macos-14
+    # CHANGE 1: Update to macos-15 to get Xcode 16 support by default
+    runs-on: macos-15
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # CHANGE 2 (Optional but Recommended): Explicitly set Xcode version
+      # This ensures you don't accidentally run on a beta or older minor version.
+      - name: Set Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
       - name: Clean DerivedData
         run: rm -rf ~/Library/Developer/Xcode/DerivedData
+
+      # CHANGE 3: Install xcbeautify
+      # It is often not pre-installed on bare runners. Installing it ensures the pipe doesn't fail.
+      - name: Install xcbeautify
+        run: brew install xcbeautify
 
       - name: Run tests
         run: |
@@ -22,7 +33,7 @@ jobs:
             -project MediStock.xcodeproj \
             -scheme MediStock \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
             -derivedDataPath DerivedData \
             -resultBundlePath test-results.xcresult \
             CODE_SIGN_IDENTITY="" \
@@ -32,6 +43,7 @@ jobs:
             -skipPackagePluginValidation \
             -skipMacroValidation \
             | xcbeautify
+
       - name: Process Test Results
         uses: kishikawakatsumi/xcresulttool@v1
         with:
