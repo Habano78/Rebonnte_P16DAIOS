@@ -10,7 +10,7 @@ import Foundation
 import FirebaseFirestoreSwift
 
 //MARK: Protocol
-@MainActor
+//@MainActor
 protocol HistoryServiceProtocol: Sendable {
         func fetchMedicineHistory(for medicineId: String) async throws -> [HistoryEntry]
         func fetchAllHistory() async throws -> [HistoryEntry]

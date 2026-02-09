@@ -77,8 +77,13 @@ struct AddMedicineView: View {
         }
         
         private func save() {
+                
+                let currentUserId = di.sessionStore.session?.id ?? ""
+                guard !currentUserId.isEmpty else { return }
+                
                 let newMedicine = Medicine(
                         id: UUID().uuidString,
+                        userId: currentUserId,
                         name: name,
                         brand: brand,
                         stock: stock,

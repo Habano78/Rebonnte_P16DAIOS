@@ -15,22 +15,18 @@ struct AllMedicinesView: View {
         @State private var filterText: String = ""
         @State private var isShowingAddSheet = false
         
-        //MARK: Logique de filtrage
-        private var filteredMedicines: [Medicine] {
-                let baseList: [Medicine]
+        private var currentUserId: String {
+                di.sessionStore.session?.id ?? ""
+        }
+        // Filtrage
+        private var displayedMedicines: [Medicine] {
                 if filterText.isEmpty {
-                        baseList = di.medicineViewModel.medicines
+                        return di.medicineViewModel.medicines
                 } else {
-                        baseList = di.medicineViewModel.medicines.filter { medicine in
+                        return di.medicineViewModel.medicines.filter { medicine in
                                 medicine.name.localizedCaseInsensitiveContains(filterText) ||
                                 medicine.brand.localizedCaseInsensitiveContains(filterText)
                         }
-                }
-                return baseList.sorted {
-                        if $0.isLowStock != $1.isLowStock {
-                                return $0.isLowStock && !$1.isLowStock
-                        }
-                        return $0.name < $1.name
                 }
         }
         
@@ -38,8 +34,7 @@ struct AllMedicinesView: View {
         var body: some View {
                 NavigationStack {
                         List {
-                                
-                                ForEach(filteredMedicines) { medicine in
+                                ForEach(displayedMedicines) { medicine in
                                         NavigationLink(destination: MedicineDetailView(medicine: medicine)) {
                                                 VStack(alignment: .leading) {
                                                         Text(medicine.name)
@@ -57,17 +52,49 @@ struct AllMedicinesView: View {
                                 }
                         }
                         .navigationTitle("Inventaire complet")
-                        .searchable(text: $filterText, prompt: "Nom ou marque...")
+                        .searchable(text: $filterText, prompt: "Rechercher par nom...")
                         .toolbar {
-                                Button(action: { isShowingAddSheet = true }) {
-                                        Image(systemName: "plus")
+                                // Menu de Tri
+                                ToolbarItem(placement: .primaryAction) {
+                                        Menu {
+                                                ForEach(SortOption.allCases) { option in
+                                                        Button {
+                                                                Task {
+                                                                        await di.medicineViewModel.applySort(option, userId: currentUserId)
+                                                                }
+                                                        } label: {
+                                                                HStack {
+                                                                        Text(option.displayName)
+                                                                        if di.medicineViewModel.sortOption == option {
+                                                                                Image(systemName: "checkmark")
+                                                                        }
+                                                                }
+                                                        }
+                                                }
+                                        } label: {
+                                                Label("Trier", systemImage: "arrow.up.arrow.down.circle")
+                                        }
+                                }
+                                
+                                // Bouton Ajouter
+                                ToolbarItem(placement: .primaryAction) {
+                                        Button(action: { isShowingAddSheet = true }) {
+                                                Image(systemName: "plus")
+                                        }
                                 }
                         }
                         .sheet(isPresented: $isShowingAddSheet) {
                                 AddMedicineView()
                         }
                         .task {
-                                await di.medicineViewModel.fetchMedicines()
+                                if !currentUserId.isEmpty {
+                                        await di.medicineViewModel.fetchMedicines(userId: currentUserId)
+                                }
+                        }
+                        .onChange(of: di.medicineViewModel.sortOption) { _, newOption in
+                                Task {
+                                        await di.medicineViewModel.applySort(newOption, userId: currentUserId)
+                                }
                         }
                 }
         }

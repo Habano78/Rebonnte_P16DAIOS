@@ -4,6 +4,7 @@
 //
 //  Created by Perez William on 03/02/2026.
 //
+
 import SwiftUI
 
 struct MedicineDetailView: View {
@@ -69,7 +70,6 @@ struct MedicineDetailView: View {
                                                 Spacer()
                                         }
                                         .accessibilityLabel("Supprimer \(medicine.name)")
-                                        .accessibilityHint("Ouvre une alerte de confirmation de suppression définitive")
                                 }
                         }
                 }
@@ -80,26 +80,31 @@ struct MedicineDetailView: View {
                         Button("Modifier") {
                                 isShowingEditSheet = true
                         }
-                        .accessibilityLabel("Modifier la fiche")
-                        .accessibilityHint("Ouvre un formulaire pour changer le stock ou le rayon")
                         .foregroundStyle(.blue)
                         .fontWeight(.medium)
                 }
                 
-                // MARK: Alerts
+                // MARK: Alerts & Sheets
                 .sheet(isPresented: $isShowingEditSheet) {
                         EditMedicineView(medicine: medicine)
                 }
                 .alert("Supprimer \(medicine.name) ?", isPresented: $isShowingDeleteAlert) {
                         Button("Annuler", role: .cancel) { }
+                        
                         Button("Supprimer", role: .destructive) {
                                 Task {
-                                        await di.medicineViewModel.deleteMedicine(id: medicine.id ?? "")
+                                        let userEmail = di.sessionStore.userEmail ?? "Inconnu"
+                                        
+                                        await di.medicineViewModel.deleteMedicine(
+                                                id: medicine.id ?? "",
+                                                userEmail: userEmail
+                                        )
+                                        
                                         dismiss()
                                 }
                         }
                 } message: {
-                        Text("Cette action est irréversible. Toutes les données de stock et l'historique seront perdus.")
+                        Text("Cette action est irréversible. L'événement sera enregistré dans l'historique.")
                 }
                 // MARK: Lifecycle
                 .task {
@@ -122,7 +127,6 @@ struct DetailRow: View {
                                 .foregroundColor(.secondary)
                                 .fontWeight(isBold ? .bold : .regular)
                 }
-                // MARK: Accessibilité VoiceOver
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel(LocalizedStringKey(label))
                 .accessibilityValue(value)
@@ -141,9 +145,5 @@ struct DateRow: View {
                         Text(date, style: style)
                                 .foregroundColor(.secondary)
                 }
-                // MARK: Accessibilité
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel(LocalizedStringKey(label))
-                .accessibilityValue(date.formatted(date: .long, time: .omitted))
         }
 }

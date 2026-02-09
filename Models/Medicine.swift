@@ -2,6 +2,7 @@ import Foundation
 
 struct Medicine: Identifiable, Codable {
         let id: String?
+        let userId: String
         var name: String
         var brand: String
         var stock: Int

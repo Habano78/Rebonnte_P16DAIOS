@@ -15,7 +15,7 @@ struct EditMedicineView: View {
         
         let medicine: Medicine
         
-        // MARK: States
+        // MARK: - States
         @State private var name: String
         @State private var brand: String
         @State private var category: MedicineCategory
@@ -87,6 +87,7 @@ struct EditMedicineView: View {
                 
                 let updatedMedicine = Medicine(
                         id: medicine.id,
+                        userId: medicine.userId,
                         name: name,
                         brand: brand,
                         stock: editedStock,
