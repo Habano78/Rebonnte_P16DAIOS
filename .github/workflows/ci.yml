@@ -34,8 +34,8 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild test \
-            -project EPCollaboratif.xcodeproj \
-            -scheme EPCollaboratif \
+            -project MediStock.xcodeproj \
+            -scheme MediStock \
             -sdk iphonesimulator \
             -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
             -derivedDataPath DerivedData \
