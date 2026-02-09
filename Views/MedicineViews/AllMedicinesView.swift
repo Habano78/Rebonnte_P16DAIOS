@@ -15,7 +15,7 @@ struct AllMedicinesView: View {
         @State private var filterText: String = ""
         @State private var isShowingAddSheet = false
         
-        //MARK: Logique de filtrage améliorée
+        //MARK: Logique de filtrage
         private var filteredMedicines: [Medicine] {
                 let baseList: [Medicine]
                 if filterText.isEmpty {
@@ -65,6 +65,9 @@ struct AllMedicinesView: View {
                         }
                         .sheet(isPresented: $isShowingAddSheet) {
                                 AddMedicineView()
+                        }
+                        .task {
+                                await di.medicineViewModel.fetchMedicines()
                         }
                 }
         }
