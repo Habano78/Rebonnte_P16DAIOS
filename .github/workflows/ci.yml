@@ -1,24 +1,24 @@
 name: iOS Build and Test
 on:
-  pull_request:
-    branches:
-      - main
+        pull_request:
+        branches:
+        - main
 
 jobs:
-  build-and-test:
-    runs-on: macos-latest
-
-    - name: Checkout
+        build-and-test:
+        runs-on: macos-latest
+        
+        - name: Checkout
         uses: actions/checkout@v4
-      
-      - name: Show environment
+        
+        - name: Show environment
         run: |
           echo "Xcode version:"
           xcodebuild -version
           echo "\nAvailable simulators:"
           xcrun simctl list devices available | grep "iPhone"
-      
-      - name: Install dependencies
+        
+        - name: Install dependencies
         run: |
           if [ -f Podfile ]; then
             echo "Installing CocoaPods dependencies..."
@@ -26,14 +26,14 @@ jobs:
             pod install
           fi
           brew install xcbeautify
-      
-      - name: Clean DerivedData
+        
+        - name: Clean DerivedData
         run: rm -rf ~/Library/Developer/Xcode/DerivedData
-
-      - name: Run tests
+        
+        - name: Run tests
         run: |
-          set -o pipefail
-          xcodebuild test \
+            set -o pipefail
+            xcodebuild test \
             -project EPCollaboratif.xcodeproj \
             -scheme EPCollaboratif \
             -sdk iphonesimulator \
@@ -47,17 +47,17 @@ jobs:
             -skipPackagePluginValidation \
             -skipMacroValidation \
             | xcbeautify
-      - name: Process Test Results
+        - name: Process Test Results
         uses: kishikawakatsumi/xcresulttool@v1
         with:
-          path: test-results.xcresult
-          token: ${{ secrets.GITHUB_TOKEN }}
+                path: test-results.xcresult
+                token: ${{ secrets.GITHUB_TOKEN }}
         if: success() || failure()
         continue-on-error: true
-
-      - name: Upload test bundle
+        
+        - name: Upload test bundle
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: test-results.xcresult
+                name: test-results
+                path: test-results.xcresult
         if: always()
