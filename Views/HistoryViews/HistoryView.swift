@@ -15,7 +15,6 @@ struct HistoryView: View {
                         List(di.medicineViewModel.history) { entry in
                                 VStack(alignment: .leading, spacing: 6) {
                                         HStack {
-                                                // Icône dynamique selon l'action
                                                 Image(systemName: iconForAction(entry.action))
                                                         .foregroundColor(colorForAction(entry.action))
                                                 
@@ -39,7 +38,7 @@ struct HistoryView: View {
                                 .padding(.vertical, 4)
                         }
                         .navigationTitle("Historique Global")
-                        .refreshable { // Permet de "tirer pour rafraîchir"
+                        .refreshable {
                                 await di.medicineViewModel.fetchAllHistory()
                         }
                         .task {

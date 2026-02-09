@@ -17,6 +17,10 @@ struct AisleListView: View {
         //MARK: Property
         @State private var isShowingAddSheet = false
         
+        private var currentUserId: String {
+                di.sessionStore.session?.id ?? ""
+        }
+        
         //MARK: Body
         var body: some View {
                 NavigationStack {
@@ -43,7 +47,9 @@ struct AisleListView: View {
                                 AddMedicineView()
                         }
                         .task {
-                                await di.medicineViewModel.fetchMedicines()
+                                if !currentUserId.isEmpty {
+                                        await di.medicineViewModel.fetchMedicines(userId: currentUserId)
+                                }
                         }
                 }
         }

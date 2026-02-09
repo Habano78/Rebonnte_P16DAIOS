@@ -44,7 +44,8 @@ final class AuthService: AuthServiceProtocol {
         
         func userStream() -> AsyncStream<User?> {
                 AsyncStream { continuation in
-                        let handle = auth.addStateDidChangeListener { _, firebaseUser in
+                        let handle = auth.addStateDidChangeListener { [weak self] _, firebaseUser in
+                                guard let _ = self else { return }
                                 let user = firebaseUser.map { User(id: $0.uid, email: $0.email ?? "") }
                                 continuation.yield(user)
                         }

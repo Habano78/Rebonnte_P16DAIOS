@@ -8,63 +8,119 @@
 import SwiftUI
 
 struct AllMedicinesView: View {
-        // MARK: Dependences
+        
+        // MARK: - Dependencies
         @Environment(DIContainer.self) private var di
         
-        // MARK: Properties
+        // MARK: - Properties
         @State private var filterText: String = ""
         @State private var isShowingAddSheet = false
         
-        //MARK: Logique de filtrage améliorée
-        private var filteredMedicines: [Medicine] {
-                let baseList: [Medicine]
+        private var currentUserId: String {
+                di.sessionStore.session?.id ?? ""
+        }
+        
+        // MARK: - Logic
+        
+        /// Combine les données du serveur (déjà triées/filtrées par catégorie)
+        /// avec une recherche textuelle locale pour la réactivité.
+        private var displayedMedicines: [Medicine] {
                 if filterText.isEmpty {
-                        baseList = di.medicineViewModel.medicines
+                        return di.medicineViewModel.medicines
                 } else {
-                        baseList = di.medicineViewModel.medicines.filter { medicine in
+                        return di.medicineViewModel.medicines.filter { medicine in
                                 medicine.name.localizedCaseInsensitiveContains(filterText) ||
                                 medicine.brand.localizedCaseInsensitiveContains(filterText)
                         }
                 }
-                return baseList.sorted {
-                        if $0.isLowStock != $1.isLowStock {
-                                return $0.isLowStock && !$1.isLowStock
-                        }
-                        return $0.name < $1.name
-                }
         }
         
-        // MARK: Body
+        // MARK: - Body
         var body: some View {
                 NavigationStack {
-                        List {
+                        VStack(spacing: 0) {
                                 
-                                ForEach(filteredMedicines) { medicine in
-                                        NavigationLink(destination: MedicineDetailView(medicine: medicine)) {
-                                                VStack(alignment: .leading) {
-                                                        Text(medicine.name)
-                                                                .font(.headline)
-                                                        
-                                                        Text("Stock : \(medicine.stock)")
-                                                                .font(.subheadline)
-                                                                .foregroundColor(medicine.isLowStock ? .red : .secondary)
+                                CategoryFilterView()
+                                
+                                List {
+                                        ForEach(displayedMedicines) { medicine in
+                                                NavigationLink(destination: MedicineDetailView(medicine: medicine)) {
+                                                        VStack(alignment: .leading) {
+                                                                Text(medicine.name)
+                                                                        .font(.headline)
+                                                                
+                                                                Text("Stock : \(medicine.stock)")
+                                                                        .font(.subheadline)
+                                                                        .foregroundColor(medicine.isLowStock ? .red : .secondary)
+                                                        }
+                                                        // Accessibilité
+                                                        .accessibilityElement(children: .combine)
+                                                        .accessibilityLabel("\(medicine.name)")
+                                                        .accessibilityValue(medicine.isLowStock ? "Stock critique : \(medicine.stock)" : "\(medicine.stock)")
                                                 }
-                                                // MARK: Accessibilité
-                                                .accessibilityElement(children: .combine)
-                                                .accessibilityLabel("\(medicine.name)")
-                                                .accessibilityValue(medicine.isLowStock ? "Stock critique : \(medicine.stock) unités" : "\(medicine.stock) en stock")
+                                                // 🚀 Lazy Loading : Détection de la fin de liste
+                                                .onAppear {
+                                                        if medicine.id == di.medicineViewModel.medicines.last?.id && filterText.isEmpty {
+                                                                Task {
+                                                                        await di.medicineViewModel.loadMoreMedicines(userId: currentUserId)
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                        
+                                        // Indicateur de chargement
+                                        if di.medicineViewModel.isLoadingMore {
+                                                HStack {
+                                                        Spacer()
+                                                        ProgressView("Chargement de la suite...")
+                                                                .progressViewStyle(.circular)
+                                                                .padding()
+                                                        Spacer()
+                                                }
                                         }
                                 }
+                                .listStyle(.plain)
                         }
                         .navigationTitle("Inventaire complet")
-                        .searchable(text: $filterText, prompt: "Nom ou marque...")
+                        .searchable(text: $filterText, prompt: "Rechercher par nom (local)...")
+                        
+                        // MARK: - Toolbar
                         .toolbar {
-                                Button(action: { isShowingAddSheet = true }) {
-                                        Image(systemName: "plus")
+                                ToolbarItem(placement: .primaryAction) {
+                                        Menu {
+                                                ForEach(SortOption.allCases) { option in
+                                                        Button {
+                                                                Task {
+                                                                        await di.medicineViewModel.applySort(option, userId: currentUserId)
+                                                                }
+                                                        } label: {
+                                                                HStack {
+                                                                        Text(option.displayName)
+                                                                        if di.medicineViewModel.sortOption == option {
+                                                                                Image(systemName: "checkmark")
+                                                                        }
+                                                                }
+                                                        }
+                                                }
+                                        } label: {
+                                                Label("Trier", systemImage: "arrow.up.arrow.down.circle")
+                                        }
+                                }
+                                
+                                // Bouton Ajouter
+                                ToolbarItem(placement: .primaryAction) {
+                                        Button(action: { isShowingAddSheet = true }) {
+                                                Image(systemName: "plus")
+                                        }
                                 }
                         }
                         .sheet(isPresented: $isShowingAddSheet) {
                                 AddMedicineView()
+                        }
+                        .task {
+                                if di.medicineViewModel.medicines.isEmpty && !currentUserId.isEmpty {
+                                        await di.medicineViewModel.fetchMedicines(userId: currentUserId)
+                                }
                         }
                 }
         }

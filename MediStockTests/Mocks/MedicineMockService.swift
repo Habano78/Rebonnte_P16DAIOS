@@ -10,27 +10,45 @@ import Foundation
 
 enum MockError: Error { case testFailure }
 
-//MARK: Medicine Service
+// MARK: - Mock Medicine Service
 @MainActor
 final class MockMedicineService: MedicineServiceProtocol {
+    
+    // Propriétés de contrôle pour les tests
+    var shouldFail = false
+    var medicinesToReturn: [Medicine] = []
+    
+
+    func fetchMedicines(
+        userId: String,
+        category: MedicineCategory?,
+        sortBy: SortOption,
+        descending: Bool,
+        limit: Int,
+        lastCursor: Any?
+    ) async throws -> (medicines: [Medicine], lastCursor: Any?) {
         
-        var shouldFail = false
-        var medicinesToReturn: [Medicine] = []
-        
-        func fetchMedicines() async throws -> [Medicine] {
-                if shouldFail { throw MockError.testFailure }
-                return medicinesToReturn
+        if shouldFail {
+            throw NSError(domain: "Test", code: 1, userInfo: [NSLocalizedDescriptionKey: "Mock Error"])
         }
         
-        func saveMedicine(_ medicine: Medicine) async throws {
-                if shouldFail { throw MockError.testFailure }
-        }
+        return (medicinesToReturn, nil)
+    }
+    
+    func saveMedicine(_ medicine: Medicine) async throws {
+        if shouldFail { throw NSError(domain: "Test", code: 1) }
+    }
+    
+    func deleteMedicine(id: String) async throws {
+        if shouldFail { throw NSError(domain: "Test", code: 1) }
+    }
+    
+    func updateStock(medicineId: String, newStock: Int) async throws {
+        if shouldFail { throw NSError(domain: "Test", code: 1) }
         
-        func deleteMedicine(id: String) async throws {
-                if shouldFail { throw MockError.testFailure }
+        if let index = medicinesToReturn.firstIndex(where: { $0.id == medicineId }) {
+            medicinesToReturn[index].stock = newStock
         }
-        
-        func updateStock(medicineId: String, newStock: Int) async throws {
-                if shouldFail { throw MockError.testFailure }
-        }
+    }
 }
+

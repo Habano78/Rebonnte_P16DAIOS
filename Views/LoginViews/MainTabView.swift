@@ -11,11 +11,12 @@ struct MainTabView: View {
         
         var body: some View {
                 TabView {
-                        AisleListView()
-                                .tabItem { Label("Rayons", systemImage: "square.grid.2x2") }
                         
                         AllMedicinesView()
                                 .tabItem { Label("Médicaments", systemImage: "pill.fill") }
+                        
+                        AisleListView()
+                                .tabItem { Label("Rayons", systemImage: "square.grid.2x2") }
                         
                         HistoryView()
                                 .tabItem { Label("Historique", systemImage: "clock.arrow.circlepath") }
